@@ -53,3 +53,7 @@ Label file format:
 ```
 TrackID, xmin, ymin, xmax, ymax, frame, lost, occluded, generated, label, actions
 ```
+
+### Official Paper
+train-val set: 33 video sequences
+test set: 10 video sequences
