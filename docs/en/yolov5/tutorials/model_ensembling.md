@@ -1,7 +1,7 @@
 ---
 comments: true
-description: Learn how to ensemble YOLOv5 models for improved mAP and Recall! Clone the repo, install requirements, and start testing and inference.
-keywords: YOLOv5, object detection, ensemble learning, mAP, Recall
+description: Learn how to use YOLOv5 model ensembling during testing and inference to enhance mAP and Recall for more accurate predictions.
+keywords: YOLOv5, model ensembling, testing, inference, mAP, Recall, Ultralytics, object detection, PyTorch
 ---
 
 📚 This guide explains how to use YOLOv5 🚀 **model ensembling** during testing and inference for improved mAP and Recall.
@@ -128,7 +128,7 @@ Results saved to runs/detect/exp2
 Done. (0.223s)
 ```
 
-<img src="https://user-images.githubusercontent.com/26833433/124489091-ea4f9a00-ddb0-11eb-8ef1-d6f335c97f6f.jpg" width="500" alt="YOLO inference result">
+<img src="https://github.com/ultralytics/docs/releases/download/0/yolo-inference-result.avif" width="500" alt="YOLO inference result">
 
 ## Supported Environments
 
