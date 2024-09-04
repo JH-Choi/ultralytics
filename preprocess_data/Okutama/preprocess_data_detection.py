@@ -6,7 +6,7 @@ from data_utils import read_raw_label, read_write_image
 import pdb
 
 input_path = '/mnt/hdd/data/Okutama_Action'
-output_path = '/mnt/hdd/data/Okutama_Action/yolov8_MultiAction'
+output_path = '/mnt/hdd/data/Okutama_Action/yolov8_Detection'
 input_path = Path(input_path)
 output_path = Path(output_path)
 
@@ -90,6 +90,9 @@ def preprocess_data(num_images, scene_list, src_path, src_label_path,
                 y_c = (ymin + ((ymax - ymin) / 2)) / HEIGHT
                 w = (xmax - xmin) / WIDTH
                 h = (ymax - ymin) / HEIGHT
+
+                label = 0  # Convert Every Action Labels to Person 
+
                 f1.write("%d %0.6f %0.6f %0.6f %0.6f\n" %(label,x_c,y_c,w,h))
                 raw_img = cv2.rectangle(raw_img,start_coord,end_coord,(0,0,255),5)
             f1.close()
@@ -100,32 +103,32 @@ def preprocess_data(num_images, scene_list, src_path, src_label_path,
     return num_images
 
 # Create train Data
-# image_path, label_path, mask_path = generate_path(output_path, 'train_Drone1_Morning')
-# num_img = preprocess_data(0, train_drone1_morning_scenes, 
-#                 src_path='TrainSetFrames/Drone1/Morning/Extracted-Frames-1280x720', 
-#                 src_label_path='TrainSetFrames/Labels/MultiActionLabels/3840x2160', 
-#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
-# print('------------------------------------------')
-# print('Train Drone1 Morning=>', num_img)
-# print('------------------------------------------')
+image_path, label_path, mask_path = generate_path(output_path, 'train_Drone1_Morning')
+num_img = preprocess_data(0, train_drone1_morning_scenes, 
+                src_path='TrainSetFrames/Drone1/Morning/Extracted-Frames-1280x720', 
+                src_label_path='TrainSetFrames/Labels/MultiActionLabels/3840x2160', 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Train Drone1 Morning=>', num_img)
+print('------------------------------------------')
 
-# image_path, label_path, mask_path = generate_path(output_path, 'train_Drone1_Noon')
-# num_img = preprocess_data(0, train_drone1_noon_scenes, 
-#                 src_path='TrainSetFrames/Drone1/Noon/Extracted-Frames-1280x720', 
-#                 src_label_path='TrainSetFrames/Labels/MultiActionLabels/3840x2160', 
-#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
-# print('------------------------------------------')
-# print('Train Drone1 Noon=>', num_img)
-# print('------------------------------------------')
+image_path, label_path, mask_path = generate_path(output_path, 'train_Drone1_Noon')
+num_img = preprocess_data(0, train_drone1_noon_scenes, 
+                src_path='TrainSetFrames/Drone1/Noon/Extracted-Frames-1280x720', 
+                src_label_path='TrainSetFrames/Labels/MultiActionLabels/3840x2160', 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Train Drone1 Noon=>', num_img)
+print('------------------------------------------')
 
-# image_path, label_path, mask_path = generate_path(output_path, 'train_Drone2_Morning')
-# num_img = preprocess_data(0, train_drone2_morning_scenes, 
-#                 src_path='TrainSetFrames/Drone2/Morning/Extracted-Frames-1280x720', 
-#                 src_label_path='TrainSetFrames/Labels/MultiActionLabels/3840x2160', 
-#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
-# print('------------------------------------------')
-# print('Train Drone2 Morning=>', num_img)
-# print('------------------------------------------')
+image_path, label_path, mask_path = generate_path(output_path, 'train_Drone2_Morning')
+num_img = preprocess_data(0, train_drone2_morning_scenes, 
+                src_path='TrainSetFrames/Drone2/Morning/Extracted-Frames-1280x720', 
+                src_label_path='TrainSetFrames/Labels/MultiActionLabels/3840x2160', 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Train Drone2 Morning=>', num_img)
+print('------------------------------------------')
 
 image_path, label_path, mask_path = generate_path(output_path, 'train_Drone2_Noon')
 num_img = preprocess_data(0, train_drone2_noon_scenes, 
@@ -136,34 +139,34 @@ print('------------------------------------------')
 print('Train Drone2 Noon=>', num_img)
 print('------------------------------------------')
 
-# # Create val Data
-# image_path, label_path, mask_path = generate_path(output_path, 'val_Drone1_Morning')
+# Create val Data
+image_path, label_path, mask_path = generate_path(output_path, 'val_Drone1_Morning')
 
-# num_img = preprocess_data(0, val_drone1_morning_scenes, 
-#                 src_path='TestSetFrames/Drone1/Morning/Extracted-Frames-1280x720', 
-#                 src_label_path='TestSetFrames/Labels/MultiActionLabels/3840x2160', 
-#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
-# print('------------------------------------------')
-# print('Test Drone1 Morning=>', num_img)
-# print('------------------------------------------')
+num_img = preprocess_data(0, val_drone1_morning_scenes, 
+                src_path='TestSetFrames/Drone1/Morning/Extracted-Frames-1280x720', 
+                src_label_path='TestSetFrames/Labels/MultiActionLabels/3840x2160', 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Test Drone1 Morning=>', num_img)
+print('------------------------------------------')
 
-# image_path, label_path, mask_path = generate_path(output_path, 'val_Drone1_Noon')
-# num_img = preprocess_data(0, val_drone1_noon_scenes, 
-#                 src_path='TestSetFrames/Drone1/Noon/Extracted-Frames-1280x720', 
-#                 src_label_path='TestSetFrames/Labels/MultiActionLabels/3840x2160', 
-#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
-# print('------------------------------------------')
-# print('Test Drone1 Noon=>', num_img)
-# print('------------------------------------------')
+image_path, label_path, mask_path = generate_path(output_path, 'val_Drone1_Noon')
+num_img = preprocess_data(0, val_drone1_noon_scenes, 
+                src_path='TestSetFrames/Drone1/Noon/Extracted-Frames-1280x720', 
+                src_label_path='TestSetFrames/Labels/MultiActionLabels/3840x2160', 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Test Drone1 Noon=>', num_img)
+print('------------------------------------------')
 
-# image_path, label_path, mask_path = generate_path(output_path, 'val_Drone2_Morning')
-# num_img = preprocess_data(0, val_drone2_morning_scenes, 
-#                 src_path='TestSetFrames/Drone2/Morning/Extracted-Frames-1280x720', 
-#                 src_label_path='TestSetFrames/Labels/MultiActionLabels/3840x2160', 
-#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
-# print('------------------------------------------')
-# print('Test Drone2 Morning=>', num_img)
-# print('------------------------------------------')
+image_path, label_path, mask_path = generate_path(output_path, 'val_Drone2_Morning')
+num_img = preprocess_data(0, val_drone2_morning_scenes, 
+                src_path='TestSetFrames/Drone2/Morning/Extracted-Frames-1280x720', 
+                src_label_path='TestSetFrames/Labels/MultiActionLabels/3840x2160', 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Test Drone2 Morning=>', num_img)
+print('------------------------------------------')
 
 image_path, label_path, mask_path = generate_path(output_path, 'val_Drone2_Noon')
 num_img = preprocess_data(0, val_drone2_noon_scenes, 

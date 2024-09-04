@@ -407,7 +407,9 @@ def run(
             out.write(frame)
 
         # Display the annotated frame
+        frame = cv2.resize(frame, (1280, 768)) # resize the frame for better visualization
         cv2.imshow("YOLOv8 Tracking with S3D Classification", frame)
+        # cv2.moveWindow("YOLOv8 Tracking with S3D Classification", 1920, 0)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break

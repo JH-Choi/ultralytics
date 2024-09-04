@@ -11,7 +11,8 @@ def generate_path(data_path):
     mask_path.mkdir(parents=True, exist_ok=True)
     return image_path, label_path, mask_path
 
-input_path = '/mnt/hdd/data/Okutama_Action/yolov8/val_Drone1_Morning'
+input_path = '/mnt/hdd/data/Okutama_Action/yolov8_Detection/val_Drone1_Morning'
+# input_path = '/mnt/hdd/data/Okutama_Action/yolov8_MultiAction/val_Drone1_Morning'
 input_path = Path(input_path)
 source_folder = input_path / 'images' 
 source_label_folder = input_path / 'labels'
@@ -24,9 +25,9 @@ remove_idx = [x for x in range(428, 542)] + [x for x in range(981, 1082)] + [x f
 print(f'Number of images to remove: {len(remove_idx)}')
 
 
-# os.system(f'mv {source_folder} {source_folder}_backup')
-# os.system(f'mv {source_label_folder} {source_label_folder}_backup')
-# os.system(f'mv {source_mask_folder} {source_mask_folder}_backup')
+os.system(f'mv {source_folder} {source_folder}_backup')
+os.system(f'mv {source_label_folder} {source_label_folder}_backup')
+os.system(f'mv {source_mask_folder} {source_mask_folder}_backup')
 
 source_folder = input_path / 'images_backup'
 source_label_folder = input_path / 'labels_backup'
