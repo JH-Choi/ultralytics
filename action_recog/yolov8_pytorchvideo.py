@@ -1,7 +1,13 @@
-# Ultralytics YOLO 🚀, AGPL-3.0 license
+'''
+Written by Jaehoon
+Code borrowed from examples/YOLOv8-Action-Recognition/action_recognition.py
+Combine YOLOv8 and Slowfast in  pytorchvideo
+'''
+
 
 import argparse
 import time
+import json
 from collections import defaultdict
 from typing import List, Optional, Tuple
 from urllib.parse import urlparse
@@ -15,62 +21,26 @@ from ultralytics import YOLO
 from ultralytics.data.loaders import get_best_youtube_url
 from ultralytics.utils.plotting import Annotator
 from ultralytics.utils.torch_utils import select_device
+
+
 import pdb
 
-
-class TorchVisionVideoClassifier:
-    """Classifies videos using pretrained TorchVision models; see https://pytorch.org/vision/stable/."""
-
-    from torchvision.models.video import (
-        MViT_V1_B_Weights,
-        MViT_V2_S_Weights,
-        R3D_18_Weights,
-        S3D_Weights,
-        Swin3D_B_Weights,
-        Swin3D_T_Weights,
-        mvit_v1_b,
-        mvit_v2_s,
-        r3d_18,
-        s3d,
-        swin3d_b,
-        swin3d_t,
-    )
-
-    model_name_to_model_and_weights = {
-        "s3d": (s3d, S3D_Weights.DEFAULT),
-        "r3d_18": (r3d_18, R3D_18_Weights.DEFAULT),
-        "swin3d_t": (swin3d_t, Swin3D_T_Weights.DEFAULT),
-        "swin3d_b": (swin3d_b, Swin3D_B_Weights.DEFAULT),
-        "mvit_v1_b": (mvit_v1_b, MViT_V1_B_Weights.DEFAULT),
-        "mvit_v2_s": (mvit_v2_s, MViT_V2_S_Weights.DEFAULT),
-    }
+class PytorchVideoVideoClassifier:
 
     def __init__(self, model_name: str, device: str or torch.device = ""):
-        """
-        Initialize the VideoClassifier with the specified model name and device.
+        json_filename = "kinetics_classnames.json"
 
-        Args:
-            model_name (str): The name of the model to use.
-            device (str or torch.device, optional): The device to run the model on. Defaults to "".
+        with open(json_filename, "r") as f:
+            kinetics_classnames = json.load(f)
+        # Create an id to label name mapping
+        self.kinetics_id_to_classname = {}
+        for k, v in kinetics_classnames.items():
+            self.kinetics_id_to_classname[v] = str(k).replace('"', "")
 
-        Raises:
-            ValueError: If an invalid model name is provided.
-        """
-        if model_name not in self.model_name_to_model_and_weights:
-            raise ValueError(f"Invalid model name '{model_name}'. Available models: {self.available_model_names()}")
-        model, self.weights = self.model_name_to_model_and_weights[model_name]
+        self.post_act = torch.nn.Softmax(dim=0)
+
         self.device = select_device(device)
-        self.model = model(weights=self.weights).to(self.device).eval()
-
-    @staticmethod
-    def available_model_names() -> List[str]:
-        """
-        Get the list of available model names.
-
-        Returns:
-            list: List of available model names.
-        """
-        return list(TorchVisionVideoClassifier.model_name_to_model_and_weights.keys())
+        self.model = torch.hub.load("facebookresearch/pytorchvideo:main", model=model_name, pretrained=True).to(self.device).eval()
 
     def preprocess_crops_for_video_cls(self, crops: List[np.ndarray], input_size: list = None) -> torch.Tensor:
         """
@@ -86,12 +56,12 @@ class TorchVisionVideoClassifier:
         if input_size is None:
             input_size = [224, 224]
         from torchvision.transforms import v2
-
+        
         transform = v2.Compose(
             [
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Resize(input_size, antialias=True),
-                v2.Normalize(mean=self.weights.transforms().mean, std=self.weights.transforms().std),
+                v2.Normalize(mean=[0.45, 0.45, 0.45], std=[0.225, 0.225, 0.225]),
             ]
         )
 
@@ -126,119 +96,34 @@ class TorchVisionVideoClassifier:
         pred_labels = []
         pred_confs = []
         for output in outputs:
-            pred_class = output.argmax(0).item()
-            pred_label = self.weights.meta["categories"][pred_class]
-            pred_labels.append(pred_label)
-            pred_conf = output.softmax(0)[pred_class].item()
-            pred_confs.append(pred_conf)
-
-        return pred_labels, pred_confs
-
-
-class HuggingFaceVideoClassifier:
-    """Zero-shot video classifier using Hugging Face models for various devices."""
-
-    def __init__(
-        self,
-        labels: List[str],
-        model_name: str = "microsoft/xclip-base-patch16-zero-shot",
-        device: str or torch.device = "",
-        fp16: bool = False,
-    ):
-        """
-        Initialize the HuggingFaceVideoClassifier with the specified model name.
-
-        Args:
-            labels (List[str]): List of labels for zero-shot classification.
-            model_name (str): The name of the model to use. Defaults to "microsoft/xclip-base-patch16-zero-shot".
-            device (str or torch.device, optional): The device to run the model on. Defaults to "".
-            fp16 (bool, optional): Whether to use FP16 for inference. Defaults to False.
-        """
-        self.fp16 = fp16
-        self.labels = labels
-        self.device = select_device(device)
-        self.processor = AutoProcessor.from_pretrained(model_name)
-        model = AutoModel.from_pretrained(model_name).to(self.device)
-        if fp16:
-            model = model.half()
-        self.model = model.eval()
-
-    def preprocess_crops_for_video_cls(self, crops: List[np.ndarray], input_size: list = None) -> torch.Tensor:
-        """
-        Preprocess a list of crops for video classification.
-
-        Args:
-            crops (List[np.ndarray]): List of crops to preprocess. Each crop should have dimensions (H, W, C)
-            input_size (tuple, optional): The target input size for the model. Defaults to (224, 224).
-
-        Returns:
-            torch.Tensor: Preprocessed crops as a tensor (1, T, C, H, W).
-        """
-        if input_size is None:
-            input_size = [224, 224]
-        from torchvision import transforms
-
-        transform = transforms.Compose(
-            [
-                transforms.Lambda(lambda x: x.float() / 255.0),
-                transforms.Resize(input_size),
-                transforms.Normalize(
-                    mean=self.processor.image_processor.image_mean, std=self.processor.image_processor.image_std
-                ),
-            ]
-        )
-
-        processed_crops = [transform(torch.from_numpy(crop).permute(2, 0, 1)) for crop in crops]  # (T, C, H, W)
-        output = torch.stack(processed_crops).unsqueeze(0).to(self.device)  # (1, T, C, H, W)
-        if self.fp16:
-            output = output.half()
-        return output
-
-    def __call__(self, sequences: torch.Tensor) -> torch.Tensor:
-        """
-        Perform inference on the given sequences.
-
-        Args:
-            sequences (torch.Tensor): The input sequences for the model. Batched video frames with shape (B, T, H, W, C).
-
-        Returns:
-            torch.Tensor: The model's output.
-        """
-        input_ids = self.processor(text=self.labels, return_tensors="pt", padding=True)["input_ids"].to(self.device)
-
-        inputs = {"pixel_values": sequences, "input_ids": input_ids}
-
-        with torch.inference_mode():
-            outputs = self.model(**inputs)
-
-        return outputs.logits_per_video
-
-    def postprocess(self, outputs: torch.Tensor) -> Tuple[List[List[str]], List[List[float]]]:
-        """
-        Postprocess the model's batch output.
-
-        Args:
-            outputs (torch.Tensor): The model's output.
-
-        Returns:
-            List[List[str]]: The predicted top3 labels.
-            List[List[float]]: The predicted top3 confidences.
-        """
-        pred_labels = []
-        pred_confs = []
-
-        with torch.no_grad():
-            logits_per_video = outputs  # Assuming outputs is already the logits tensor
-            probs = logits_per_video.softmax(dim=-1)  # Use softmax to convert logits to probabilities
-
-        for prob in probs:
-            top2_indices = prob.topk(2).indices.tolist()
-            top2_labels = [self.labels[idx] for idx in top2_indices]
-            top2_confs = prob[top2_indices].tolist()
+            preds = self.post_act(output)
+            top2_indices = preds.topk(2).indices.tolist()
+            top2_labels = [self.kinetics_id_to_classname[int(i)] for i in top2_indices]
+            top2_confs = preds[top2_indices].tolist()
             pred_labels.append(top2_labels)
             pred_confs.append(top2_confs)
 
+            # pred_class = output.argmax(0).item()
+            # pred_label = self.weights.meta["categories"][pred_class]
+            # pred_labels.append(pred_label)
+            # pred_conf = output.softmax(0)[pred_class].item()
+            # pred_confs.append(pred_conf)
+
+        # with torch.no_grad():
+        #     logits_per_video = outputs  # Assuming outputs is already the logits tensor
+        #     probs = logits_per_video.softmax(dim=-1)  # Use softmax to convert logits to probabilities
+
+        # for prob in probs:
+        #     top2_indices = prob.topk(2).indices.tolist()
+        #     top2_labels = [self.labels[idx] for idx in top2_indices]
+        #     top2_confs = prob[top2_indices].tolist()
+        #     pred_labels.append(top2_labels)
+        #     pred_confs.append(top2_confs)
+
         return pred_labels, pred_confs
+
+
+
 
 
 def crop_and_pad(frame, box, margin_percent):
@@ -308,16 +193,7 @@ def run(
     # Initialize models and device
     device = select_device(device)
     yolo_model = YOLO(weights).to(device)
-    if video_classifier_model in TorchVisionVideoClassifier.available_model_names():
-        print("'fp16' is not supported for TorchVisionVideoClassifier. Setting fp16 to False.")
-        print(
-            "'labels' is not used for TorchVisionVideoClassifier. Ignoring the provided labels and using Kinetics-400 labels."
-        )
-        video_classifier = TorchVisionVideoClassifier(video_classifier_model, device=device)
-    else:
-        video_classifier = HuggingFaceVideoClassifier(
-            labels, model_name=video_classifier_model, device=device, fp16=fp16
-        )
+    video_classifier = PytorchVideoVideoClassifier(video_classifier_model, device=device)
 
     # Initialize video capture
     if source.startswith("http") and urlparse(source).hostname in {"www.youtube.com", "youtube.com", "youtu.be"}:
@@ -351,7 +227,6 @@ def run(
             break
 
         frame_counter += 1
-        print(f"Processing frame {frame_counter}")
 
         # Run YOLO tracking
         results = yolo_model.track(frame, persist=True, classes=[0])  # Track only person class
@@ -389,13 +264,13 @@ def run(
                 or frame_counter % int(num_video_sequence_samples * skip_frame * (1 - video_cls_overlap_ratio)) == 0
             ):
                 crops_batch = torch.cat(crops_to_infer, dim=0)
-                print(f"crops_batch shape: {crops_batch.shape}")    
+
                 start_inference_time = time.time()
                 output_batch = video_classifier(crops_batch)
                 end_inference_time = time.time()
                 inference_time = end_inference_time - start_inference_time
                 print(f"video cls inference time: {inference_time:.4f} seconds")
-
+                
                 pred_labels, pred_confs = video_classifier.postprocess(output_batch)
 
             if track_ids_to_infer and crops_to_infer:
@@ -415,7 +290,7 @@ def run(
         # Display the annotated frame
         frame = cv2.resize(frame, (1280, 768)) # resize the frame for better visualization
         cv2.imshow("YOLOv8 Tracking with S3D Classification", frame)
-        # # cv2.moveWindow("YOLOv8 Tracking with S3D Classification", 1920, 0)
+        # cv2.moveWindow("YOLOv8 Tracking with S3D Classification", 1920, 0)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
@@ -424,6 +299,14 @@ def run(
     if output_path is not None:
         out.release()
     cv2.destroyAllWindows()
+
+
+def download_kinetics():
+    import urllib
+    json_url = "https://dl.fbaipublicfiles.com/pyslowfast/dataset/class_names/kinetics_classnames.json"
+    json_filename = "kinetics_classnames.json"
+    try: urllib.URLopener().retrieve(json_url, json_filename)
+    except: urllib.request.urlretrieve(json_url, json_filename)
 
 
 def parse_opt():
@@ -450,7 +333,7 @@ def parse_opt():
     )
     parser.add_argument("--fp16", action="store_true", help="use FP16 for inference")
     parser.add_argument(
-        "--video-classifier-model", type=str, default="microsoft/xclip-base-patch32", help="video classifier model name"
+        "--video-classifier-model", type=str, default="i3d_r50", help="video classifier model name"
     )
     parser.add_argument(
         "--labels",
@@ -464,9 +347,11 @@ def parse_opt():
 
 def main(opt):
     """Main function."""
+    download_kinetics()
     run(**vars(opt))
 
 
 if __name__ == "__main__":
     opt = parse_opt()
     main(opt)
+
