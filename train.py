@@ -1,9 +1,16 @@
-import ultralytics
+import argparse
 #from ultralytics import YOLO
 from ultralytics.models.yolo.model import YOLO
 
-data = 'Okutama.yaml'
-name = 'train_D1_Morn_val_D1_Morn'
+parser = argparse.ArgumentParser()
+parser.add_argument('--data', type=str, default='Okutama.yaml', help='dataset.yaml')
+parser.add_argument('--name', type=str, default='train_D1_Morn_val_D1_Morn', help='experiment name')
+args = parser.parse_args()
+
+# data = 'Okutama.yaml' # Okutama.yaml | Archangel.yaml
+# name = 'train_D1_Morn_val_D1_Morn' # experiment name
+data = args.data # Okutama.yaml | Archangel.yaml
+name = args.name # experiment name
 epochs = 20
 freeze = 10
 batch = 16
@@ -11,7 +18,7 @@ img=1280
 
 # Load a model
 model = YOLO('yolov8n.yaml')  # build a new model from scratch
-model = YOLO('./ckpts/yolov8n.pt')  # load a pretrained model (recommended for training)
+model = YOLO('yolov8n.pt')  # load a pretrained model (recommended for training)
 
 # model = YOLO('yolov8s.yaml')  # build a new model from scratch
 # model = YOLO('yolov8s.pt')  # load a pretrained model (recommended for training)
