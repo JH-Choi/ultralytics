@@ -1,0 +1,42 @@
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: /data/Archangel  # dataset root dir
+#train: AA_BP_17_22-5_15_40_20211123_1637693358_EO/images  # train images (relative to 'path')  6471 images
+#val: AA_BP_17_22-5_15_35_20211123_1637693296_EO/images  # val images (relative to 'path')  548 images
+
+# train: AA_BP_15_45_15_20_20211123_1637691085_EO/yolo/images  # train images (relative to 'path')  6471 images
+# train: AA_BP_15_45_15_20_20211123_1637691085_EO_combined/images  # train images (relative to 'path')  6471 images
+# train: AA_BP_15_45_15_20_20211123_1637691085_EO_nerfacto/images  # train images (relative to 'path')  6471 images
+
+# train: Archangel_15m_yolo/AA_BP_17_22-5_15_40_20211123_1637693358_EO/yolo/images  # val images (relative to 'path')  549 images
+# train: Archangel_15m_yolo/AA_BP_17_22-5_15_40_20211123_1637693358_EO_nerfacto/images  # val images (relative to 'path')  550 images
+train: Archangel_15m_yolo/AA_BP_17_22-5_15_40_20211123_1637693358_EO_combined/images  # val images (relative to 'path')  549 images
+
+# train: Archangel_50m_yolo/AA_BP_12_45_50_40_20211123_1637682382_EO/yolo/images  # val images (relative to 'path')  549 images
+
+val: Archangel_35m_yolo/AA_BP_8_45_35_40_20211123_1637679134_EO/yolo/images  # val images (relative to 'path')  549 images
+# val: Archangel_40m_yolo/AA_BP_10_45_40_40_20211123_1637680515_EO/yolo/images  # val images (relative to 'path')  549 images
+# val: Archangel_45m_yolo/AA_BP_11_45_45_40_20211123_1637681445_EO/yolo/images  # val images (relative to 'path')  549 images
+# val: Archangel_50m_yolo/AA_BP_12_45_50_40_20211123_1637682382_EO/yolo/images  # val images (relative to 'path')  549 images
+
+# val: AA_BP_17_22-5_15_25_20211123_1637693190_EO/yolo/images  # val images (relative to 'path')  548 images
+# val: AA_BP_17_22-5_15_30_20211123_1637693243_EO/yolo/images  # val images (relative to 'path')  548 images
+# val: AA_BP_17_22-5_15_35_20211123_1637693296_EO/yolo/images  # val images (relative to 'path')  548 images
+
+
+# val: Archangel_35m_yolo//yolo/images  # val images (relative to 'path')  549 images
+# val: Archangel_40m_yolo//yolo/images  # val images (relative to 'path')  549 images
+# val: Archangel_45m_yolo//yolo/images  # val images (relative to 'path')  549 images
+# val: Archangel_50m_yolo/AA_BP_12_45_50_40_20211123_1637682382_EO/yolo/images  # val images (relative to 'path')  549 images
+
+# val: Archangel_15m_yolo/AA_BP_17_22-5_15_40_20211123_1637693358_EO/yolo/images  # val images (relative to 'path')  549 images
+# val: AA_BP_17_22-5_15_45_20211123_1637693426_EO/yolo/images  # val images (relative to 'path')  548 images
+# val: AA_BP_17_22-5_15_50_20211123_1637693486_EO/yolo/images  # val images (relative to 'path')  548 images
+test: 
+
+# Classes
+names:
+  0: standing
+  1: kneeling
+  2: lying
+
+
