@@ -31,6 +31,45 @@
 
 
 ### Input: Images / Evaluating multiple models
+# DATA=(
+#     "Okutama-D-D1M-D1M.yaml" 
+#     "Okutama-D-D2M-D2M.yaml" 
+#     "Okutama-D-D1N-D1N.yaml" 
+#     "Okutama-D-D2N-D2N.yaml" 
+#     "Okutama-D-D1D2M-D1D2M.yaml" 
+#     "Okutama-D-D1D2N-D1D2N.yaml" 
+#     "Okutama-D-ALL-ALL.yaml" 
+# ) 
+# MODEL=(
+#     "runs/detect/Detect_D1M_val_D1M/weights/best.pt" 
+#     "runs/detect/Detect_D2M_val_D2M/weights/best.pt" 
+#     "runs/detect/Detect_D1N_val_D1N/weights/best.pt" 
+#     "runs/detect/Detect_D2N_val_D2N/weights/best.pt" 
+#     "runs/detect/Detect_D1D2M_val_D1D2M/weights/best.pt" 
+#     "runs/detect/Detect_D1D2N_val_D1D2N/weights/best.pt" 
+#     "runs/detect/Detect_ALL_val_ALL/weights/best.pt" 
+# )
+# NAME=(
+#     "Eval_D1M_D1M"
+#     "Eval_D2M_D2M"
+#     "Eval_D1N_D1N"
+#     "Eval_D2N_D2N"
+#     "Eval_D1D2M_D1D2M"
+#     "Eval_D1D2N_D1D2N"
+#     "Eval_ALL_ALL"
+# )
+
+# length=${#DATA[@]}
+
+# for (( i=0; i<$length; i++ ))
+# do
+#    echo "DATA ${DATA[$i]} | MODEL ${MODEL[$i]} | NAME ${NAME[$i]}"
+#    yolo task=detect mode=val \
+#      model="${MODEL[$i]}" data="${DATA[$i]}" name="${NAME[$i]}" \
+#      show=True
+# done
+
+
 DATA=(
     "Okutama-D-D1M-D1M.yaml" 
     "Okutama-D-D2M-D2M.yaml" 
@@ -41,25 +80,23 @@ DATA=(
     "Okutama-D-ALL-ALL.yaml" 
 ) 
 MODEL=(
-    "runs/detect/Detect_D1M_val_D1M/weights/best.pt" 
-    "runs/detect/Detect_D2M_val_D2M/weights/best.pt" 
-    "runs/detect/Detect_D1N_val_D1N/weights/best.pt" 
-    "runs/detect/Detect_D2N_val_D2N/weights/best.pt" 
-    "runs/detect/Detect_D1D2M_val_D1D2M/weights/best.pt" 
-    "runs/detect/Detect_D1D2N_val_D1D2N/weights/best.pt" 
-    "runs/detect/Detect_ALL_val_ALL/weights/best.pt" 
+    "yolov8n.pt" 
+    "yolov8n.pt" 
+    "yolov8n.pt" 
+    "yolov8n.pt" 
+    "yolov8n.pt" 
+    "yolov8n.pt" 
+    "yolov8n.pt" 
 )
 NAME=(
-    "Eval_D1M_D1M"
-    "Eval_D2M_D2M"
-    "Eval_D1N_D1N"
-    "Eval_D2N_D2N"
-    "Eval_D1D2M_D1D2M"
-    "Eval_D1D2N_D1D2N"
-    "Eval_ALL_ALL"
+    "Eval_pretrained_D1M"
+    "Eval_pretrained_D2M"
+    "Eval_pretrained_D1N"
+    "Eval_pretrained_D2N"
+    "Eval_pretrained_D1D2M"
+    "Eval_pretrained_D1D2N"
+    "Eval_pretrained_ALL"
 )
-
-
 
 length=${#DATA[@]}
 
