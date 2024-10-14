@@ -2,7 +2,8 @@ import cv2
 import numpy as np 
 import pdb
 
-def read_raw_label(source_label_txt, target_labels):
+def read_raw_label(source_label_txt, target_labels, skip_interpolate=False):
+    # read only detection bouding boxes
     bboxes = {}
     people = set()
     same_people = {}
@@ -13,6 +14,9 @@ def read_raw_label(source_label_txt, target_labels):
     for line in label_lines:
         line = line.replace("\n","")
         s = line.split(" ")
+        if skip_interpolate:
+            if int(s[8]) == 1: continue
+
         if len(s[9:]) == 1 or s[-1] == "":
             continue
         elif s[10][1:-1] in target_labels.keys():
@@ -22,7 +26,7 @@ def read_raw_label(source_label_txt, target_labels):
         if frame not in bboxes:
             bboxes[frame] = set()
         new_coord = (int(s[1]),int(s[2]),int(s[3]),int(s[4]),int(s[0]),int(lbl))
-        curr_person = int(s[0])
+        curr_person = int(s[0]) # Tracking ID
         if curr_person not in same_people:
             same_people[curr_person] = set()
         xc = (new_coord[0] + new_coord[2]) / 2
