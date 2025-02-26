@@ -8,7 +8,8 @@ import pdb
 input_path = '/mnt/hdd/data/Okutama_Action'
 output_path = '/mnt/hdd/data/Okutama_Action/yolov8_Detection'
 remove_noisy_label_for_test = True
-skip_interpolate_label = True
+# skip_interpolate_label = True
+skip_interpolate_label = False
 
 input_path = Path(input_path)
 output_path = Path(output_path)
@@ -40,6 +41,8 @@ val_drone2_noon_scenes = ['2.2.1', '2.2.3', '2.2.10']
 # 2.2.10: 1059~1080, 1118~1129, 1281~1312, 1501~1589, 1671~1809, 
 
 val_noisy_labels = {
+    '1.1.1': [],
+    '1.2.2': [],
     '1.1.8': [i for i in range(301, 377)] + [i for i in range(384, 542)] + [i for i in range(873, 903)] + [i for i in range(974, 1084)] + [i for i in range(1184, 1261)] + [i for i in range(1300, 1442)],
     '1.1.9': [i for i in range(476, 542)] + [i for i in range(606, 721)] + [i for i in range(1051, 1070)] + [i for i in range(1361, 1441)] + [i for i in range(1452, 1621)] + [i for i in range(1921, 1981)] + [i for i in range(2040, 2161)] + [i for i in range(2431, 2489)] + [i for i in range(2624, 2639)],
     '1.2.1': [i for i in range(461, 510)] + [i for i in range(1081, 1261)],
@@ -48,6 +51,7 @@ val_noisy_labels = {
     '2.1.8': [i for i in range(141, 181)] + [i for i in range(230, 361)] + [i for i in range(414, 440)] + [i for i in range(471, 721)] + [i for i in range(831, 901)] + [i for i in range(1090, 1261)] + [i for i in range(1411, 1420)] + [i for i in range(1623, 1801)] + [i for i in range(1961, 1981)],
     '2.1.9': [i for i in range(201, 220)] + [i for i in range(251, 361)] + [i for i in range(451, 541)] + [i for i in range(711, 901)] + [i for i in range(921, 1261)] + [i for i in range(1369, 1621)] + [i for i in range(1691, 1814)],
     '2.2.1': [i for i in range(277, 361)] + [i for i in range(460, 541)] + [i for i in range(1017, 1261)],
+    '2.2.2': [],
     '2.2.3': [i for i in range(444, 541)] + [i for i in range(560, 722)] + [i for i in range(739, 901)] + [i for i in range(1842, 1922)],
     '2.2.10': [i for i in range(1059, 1081)] + [i for i in range(1118, 1130)] + [i for i in range(1281, 1313)] + [i for i in range(1501, 1590)] + [i for i in range(1671, 1810)]
 }
@@ -156,12 +160,40 @@ def preprocess_data(num_images, scene_list,
 
                 f1.write("%d %0.6f %0.6f %0.6f %0.6f\n" %(label,x_c,y_c,w,h))
                 raw_img = cv2.rectangle(raw_img,start_coord,end_coord,(0,0,255),5)
+
             f1.close()
             # For debugging, save bbox screenshots
             cv2.imwrite(str(out_mask_file), raw_img)
 
         num_images += len(processed_image_files)
     return num_images
+
+#######################################
+### Create train Data for each 
+#######################################
+# image_path, label_path, mask_path = generate_path(output_path, '1.2.2')
+# num_img = preprocess_data(0, ['1.2.2'], 
+#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
+# print('------------------------------------------')
+# print('Train 1.2.2 Noon=>', num_img)
+# print('------------------------------------------')
+
+# image_path, label_path, mask_path = generate_path(output_path, '2.2.2')
+# num_img = preprocess_data(0, ['2.2.2'], 
+#                 image_path=image_path, label_path=label_path, mask_path=mask_path)
+# print('------------------------------------------')
+# print('Train 2.2.2 Noon=>', num_img)
+# print('------------------------------------------')
+
+
+image_path, label_path, mask_path = generate_path(output_path, '1.1.1')
+num_img = preprocess_data(0, ['1.1.1'], 
+                image_path=image_path, label_path=label_path, mask_path=mask_path)
+print('------------------------------------------')
+print('Train 1.1.1 Morning=>', num_img)
+print('------------------------------------------')
+
+
 
 #######################################
 ### Create train Data

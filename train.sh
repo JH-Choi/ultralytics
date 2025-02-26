@@ -1,4 +1,4 @@
-
+# conda activate yolov8
     # "Okutama-D-D1M-D1M.yaml" 
     # "Okutama-D-D2M-D2M.yaml" 
 DATA=(
