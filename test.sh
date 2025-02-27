@@ -30,6 +30,15 @@
 #   show=True 
 
 
+# MODEL=runs/detect/D_1.1.1/weights/best.pt
+# DATA_CFG=Okutama-D-D1Mpart-D1D2M.yaml
+# yolo task=detect mode=val \
+#   model=$MODEL data=$DATA_CFG \
+#   show=True 
+
+
+
+
 ### Input: Images / Evaluating multiple models
 # DATA=(
 #     "Okutama-D-D1M-D1M.yaml" 
@@ -70,41 +79,46 @@
 # done
 
 
-DATA=(
-    "Okutama-D-D1M-D1M.yaml" 
-    "Okutama-D-D2M-D2M.yaml" 
-    "Okutama-D-D1N-D1N.yaml" 
-    "Okutama-D-D2N-D2N.yaml" 
-    "Okutama-D-D1D2M-D1D2M.yaml" 
-    "Okutama-D-D1D2N-D1D2N.yaml" 
-    "Okutama-D-ALL-ALL.yaml" 
-) 
-MODEL=(
-    "yolov8n.pt" 
-    "yolov8n.pt" 
-    "yolov8n.pt" 
-    "yolov8n.pt" 
-    "yolov8n.pt" 
-    "yolov8n.pt" 
-    "yolov8n.pt" 
-)
-NAME=(
-    "Eval_pretrained_D1M"
-    "Eval_pretrained_D2M"
-    "Eval_pretrained_D1N"
-    "Eval_pretrained_D2N"
-    "Eval_pretrained_D1D2M"
-    "Eval_pretrained_D1D2N"
-    "Eval_pretrained_ALL"
-)
 
-length=${#DATA[@]}
 
-for (( i=0; i<$length; i++ ))
-do
-   echo "DATA ${DATA[$i]} | MODEL ${MODEL[$i]} | NAME ${NAME[$i]}"
-   yolo task=detect mode=val \
-     model="${MODEL[$i]}" data="${DATA[$i]}" name="${NAME[$i]}" \
-     show=True
-done
+# DATA=(
+#     "Okutama-D-D1M-D1M.yaml" 
+#     "Okutama-D-D2M-D2M.yaml" 
+#     "Okutama-D-D1N-D1N.yaml" 
+#     "Okutama-D-D2N-D2N.yaml" 
+#     "Okutama-D-D1D2M-D1D2M.yaml" 
+#     "Okutama-D-D1D2N-D1D2N.yaml" 
+#     "Okutama-D-ALL-ALL.yaml" 
+# ) 
+
+# MODEL_NAME=yolov8m
+
+# MODEL=(
+#     $MODEL_NAME'.pt'
+#     $MODEL_NAME'.pt'
+#     $MODEL_NAME'.pt'
+#     $MODEL_NAME'.pt'
+#     $MODEL_NAME'.pt'
+#     $MODEL_NAME'.pt'
+#     $MODEL_NAME'.pt'
+# )
+# NAME=(
+#     pretrained_$MODEL_NAME/Eval_pretrained_D1M
+#     pretrained_$MODEL_NAME/Eval_pretrained_D2M
+#     pretrained_$MODEL_NAME/Eval_pretrained_D1N
+#     pretrained_$MODEL_NAME/Eval_pretrained_D2N
+#     pretrained_$MODEL_NAME/Eval_pretrained_D1D2M
+#     pretrained_$MODEL_NAME/Eval_pretrained_D1D2N
+#     pretrained_$MODEL_NAME/Eval_pretrained_ALL
+# )
+
+# length=${#DATA[@]}
+
+# for (( i=0; i<$length; i++ ))
+# do
+#    echo "DATA ${DATA[$i]} | MODEL ${MODEL[$i]} | NAME ${NAME[$i]}"
+#    yolo task=detect mode=val \
+#      model="${MODEL[$i]}" data="${DATA[$i]}" name="${NAME[$i]}" \
+#      show=True
+# done
 
