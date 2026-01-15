@@ -51,6 +51,7 @@ val_noisy_labels = {
     '1.2.3': [i for i in range(0, 10)] + [i for i in range(83, 181)] + [i for i in range(224, 240)] + [i for i in range(330, 373)] + [i for i in range(442, 541)] + [i for i in range(599, 730)] + [i for i in range(801, 830)],
     '1.2.9': [],
     '1.2.10': [],
+    '2.1.1': [],
     '2.2.1': [],
     '2.2.4': [],
     '2.1.8': [i for i in range(141, 181)] + [i for i in range(230, 361)] + [i for i in range(414, 440)] + [i for i in range(471, 721)] + [i for i in range(831, 901)] + [i for i in range(1090, 1261)] + [i for i in range(1411, 1420)] + [i for i in range(1623, 1801)] + [i for i in range(1961, 1981)],
@@ -215,8 +216,8 @@ def preprocess_data(num_images, scene_list,
 # print('------------------------------------------')
 
 
-image_path, label_path, mask_path = generate_path(output_path, '2.2.4')
-num_img = preprocess_data(0, ['2.2.4'], 
+image_path, label_path, mask_path = generate_path(output_path, '2.1.1')
+num_img = preprocess_data(0, ['2.1.1'], 
                 image_path=image_path, label_path=label_path, mask_path=mask_path)
 print('------------------------------------------')
 print('Train 2.2.4 Noon=>', num_img)

@@ -173,3 +173,4 @@ calibration_*.npy
 
 tmp/
 thirdparty/
+action_recog/output

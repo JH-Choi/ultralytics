@@ -367,9 +367,13 @@ def run(
                 crops_to_infer = []
                 track_ids_to_infer = []
 
+            # track_ids = [1,2]
             for box, track_id in zip(boxes, track_ids):
+                # frame_counter = 1 / skip_frame = 1
                 if frame_counter % skip_frame == 0:
+                    # frame.shape = (2160, 3840, 3) / box.shape = (4,)
                     crop = crop_and_pad(frame, box, crop_margin_percentage)
+                    # crop.shape = (224, 224, 3)
                     track_history[track_id].append(crop)
 
                 if len(track_history[track_id]) > num_video_sequence_samples:
@@ -388,7 +392,8 @@ def run(
                 not pred_labels
                 or frame_counter % int(num_video_sequence_samples * skip_frame * (1 - video_cls_overlap_ratio)) == 0
             ):
-                crops_batch = torch.cat(crops_to_infer, dim=0)
+                # crops_to_infer[0].shape = 1,3,16,224,224
+                crops_batch = torch.cat(crops_to_infer, dim=0) # crops_batch.shape = 2,3,16,224,224
                 print(f"crops_batch shape: {crops_batch.shape}")    
                 start_inference_time = time.time()
                 output_batch = video_classifier(crops_batch)
@@ -397,6 +402,7 @@ def run(
                 print(f"video cls inference time: {inference_time:.4f} seconds")
 
                 pred_labels, pred_confs = video_classifier.postprocess(output_batch)
+                # pred_labels = ['rock climbing', 'walking the dog '] / pred_confs = [0.206, 0.472]
 
             if track_ids_to_infer and crops_to_infer:
                 for box, track_id, pred_label, pred_conf in zip(boxes, track_ids_to_infer, pred_labels, pred_confs):

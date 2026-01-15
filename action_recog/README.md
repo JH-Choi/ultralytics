@@ -23,6 +23,8 @@ install slowfast.sh
 - https://github.com/DeepRobot2020/MobileDet/blob/master/datasets/okutama_to_hd5.py
 - https://github.com/hitottiez/deepsort/tree/master?tab=readme-ov-file 
 
+### Fine-tuning Huggingface video classification model
+- https://github.com/fcakyon/video-transformers
 
 ### Fine-tuning SlowFast in pytorchvideo
 - https://github.com/facebookresearch/pytorchvideo/pull/41

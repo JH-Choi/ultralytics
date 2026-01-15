@@ -16,14 +16,19 @@
 # MODEL_NAME=yolov8n # yolov8n / yolov8s / yolov8m 
 
 for MODEL_NAME in yolov8n yolov8s yolov8m
+# for MODEL_NAME in yolov8n 
 do
-    DATA=Okutama-S2-v1-eval-D1D2N.yaml
-    NAME=$MODEL_NAME/S2_v1_eval_D1D2N
-    python train.py --data $DATA --name $NAME --model_name $MODEL_NAME
+    # DATA=Okutama-S2-v1-eval-D1D2N.yaml
+    # NAME=$MODEL_NAME/S2_v1_eval_D1D2N
+    # python train.py --data $DATA --name $NAME --model_name $MODEL_NAME
 
-    DATA=Okutama-S2-v2-eval-D1D2N.yaml
-    NAME=$MODEL_NAME/S2_v2_eval_D1D2N
-    python train.py --data $DATA --name $NAME --model_name $MODEL_NAME
+    # DATA=Okutama-S2-v2-eval-D1D2N.yaml
+    # NAME=$MODEL_NAME/S2_v2_eval_D1D2N
+    # python train.py --data $DATA --name $NAME --model_name $MODEL_NAME
+
+    DATA=Okutama-S3-v0-eval-D1D2M.yaml
+    NAME=$MODEL_NAME/S3_v0_eval_D1D2M
+    python train.py --data $DATA --name $NAME --model_name $MODEL_NAME 
 
     DATA=Okutama-S3-v1-eval-D1D2M.yaml
     NAME=$MODEL_NAME/S3_v1_eval_D1D2M
@@ -32,6 +37,11 @@ do
     DATA=Okutama-S3-v2-eval-D1D2M.yaml
     NAME=$MODEL_NAME/S3_v2_eval_D1D2M
     python train.py --data $DATA --name $NAME --model_name $MODEL_NAME  
+
+    # DATA=Okutama-SynPart-S3-eval-D1D2M.yaml
+    # # NAME=$MODEL_NAME/S3_Syn_1_1_4_eval_D1D2M # 0.193 / 0.0375
+    # NAME=$MODEL_NAME/S3_Syn_2_1_7_eval_D1D2M 
+    # python train.py --data $DATA --name $NAME --model_name $MODEL_NAME  
 done
 
 

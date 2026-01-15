@@ -3,18 +3,47 @@
 # MODEL=runs_yolov8n/train_15_40_val_50_40_combined/train/weights/best.pt
 
 ### Input: Video
+# MODEL=yolov8n.pt
 # MODEL=yolov8s.pt
+MODEL=yolov8m.pt
 # MODEL=runs/detect/Detect_D1_Morn_val_D1_Morn/weights/best.pt
 
+# v1 2.2.1 / v2 1.2.2
+# MODEL=/mnt/hdd/code/ARLproject/ultralytics/runs/detect/yolov8s/S2_v1_eval_D1D2N/weights/best.pt
+# MODEL=/mnt/hdd/code/ARLproject/ultralytics/runs/detect/yolov8s/S2_v2_eval_D1D2N/weights/best.pt
+# MODEL=/mnt/hdd/code/ARLproject/ultralytics/runs/detect/yolov8m/D_1.2.2/weights/best.pt
+
+# MODEL=/mnt/hdd/code/ARLproject/ultralytics/runs/detect/yolov8m/D_2.2.2/weights/best.pt ###
+
+# MODEL=/mnt/hdd/code/ARLproject/ultralytics/runs/detect/yolov8m/S2_v1_eval_D1D2N/weights/best.pt
+
+MODEL=/mnt/hdd/code/ARLproject/ultralytics/runs/detect/yolov8s/S2_v2_eval_D1D2N/weights/best.pt ####
+
 # SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone1/Morning/1.1.8.mp4
-# # SRC_VIDEO=/mnt/hdd/data/Archangel/Archangel_35m/AA_BP_8_45_35_25_20211123_1637678962_EO.mp4
+# SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone1/Noon/1.2.10.mp4
+# SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone2/Noon/2.2.1.mp4
+SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone2/Noon/2.2.3.mp4
+# SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone2/Noon/2.2.10.mp4
+# SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone1/Noon/1.2.1.mp4
+# SRC_VIDEO=/mnt/hdd/data/Okutama_Action/TestSetVideos/Drone1/Noon/1.2.3.mp4
+# SRC_VIDEO=/mnt/hdd/data/Archangel/Archangel_35m/AA_BP_8_45_35_25_20211123_1637678962_EO.mp4
+yolo task=detect mode=predict \
+  model=$MODEL \
+  show=True conf=0.5 \
+  source=$SRC_VIDEO
+
+
+# Use pretrained model for evaluation / Only infer person class (classes=0)
 # yolo task=detect mode=predict \
 #   model=$MODEL \
 #   show=True conf=0.5 \
+#   classes=0 \
 #   source=$SRC_VIDEO
 
 
-### Input: Images
+
+
+## Input: Images
 # MODEL=ckpts/yolov8n.pt
 # yolo task=detect mode=predict \
 #   model=$MODEL \
@@ -35,7 +64,6 @@
 # yolo task=detect mode=val \
 #   model=$MODEL data=$DATA_CFG \
 #   show=True 
-
 
 
 
